@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import mongoosePaginate from "mongoose-paginate-v2";
 
 const contactSchema = mongoose.Schema({
   first_name: {
@@ -17,6 +18,8 @@ const contactSchema = mongoose.Schema({
     type: String,
   },
 });
+
+contactSchema.plugin(mongoosePaginate);
 
 const contact = mongoose.model("Contact", contactSchema);
 export default contact;
