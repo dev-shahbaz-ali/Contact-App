@@ -6,11 +6,10 @@ import { connectDB } from "../config/database.js";
 connectDB();
 
 const app = express();
-
-app.use(express.json());
+app.set("view engine", "ejs");
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static("public"));
+app.use(express.json());
+app.use("/", ContactRoutes);
 
-app.use("/api", ContactRoutes);
-
-export const handler = serverless(app);
+export default serverless(app);
