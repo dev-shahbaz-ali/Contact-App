@@ -1,4 +1,5 @@
 import express from "express";
+// Update all import paths to include .js extension
 import {
   addContact,
   addContactPage,
