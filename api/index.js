@@ -1,7 +1,7 @@
 import express from "express";
 import serverless from "serverless-http";
-import ContactRoutes from "./routes/contacts.routes.js";
-import { connectDB } from "./config/database.js";
+import ContactRoutes from "../routes/contacts.routes.js";
+import { connectDB } from "../config/database.js";
 import path from "path";
 import { fileURLToPath } from "url";
 
