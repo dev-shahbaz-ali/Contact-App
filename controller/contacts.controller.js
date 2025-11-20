@@ -28,7 +28,7 @@ export const getContacts = async (req, res) => {
       contacts: result.docs,
     });
   } catch (error) {
-    req.render("500", { message: error });
+    res.render("500", { message: error });
   }
 };
 

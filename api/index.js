@@ -1,7 +1,7 @@
 import express from "express";
 import serverless from "serverless-http";
-import ContactRoutes from "../routes/contacts.routes.js"; // This should be ../ not ./
-import { connectDB } from "../config/database.js"; // This should be ../ not ./
+import ContactRoutes from "../routes/contacts.routes.js";
+import { connectDB } from "../config/database.js";
 
 connectDB();
 
@@ -11,5 +11,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.static("public"));
 app.use(express.json());
 app.use("/", ContactRoutes);
+
+app.listen(3000);
 
 export default serverless(app);
