@@ -1,11 +1,12 @@
 import express from "express";
-const app = express();
+import serverless from "serverless-http"; // Import serverless adapter
 import ContactRoutes from "./routes/contacts.routes.js";
 import { connectDB } from "./config/database.js";
 
-const PORT = process.env.PORT;
+// Initialize Express
+const app = express();
 
-//Database Connection
+// Database Connection
 connectDB();
 
 // Middleware
@@ -17,6 +18,5 @@ app.use(express.json());
 // Routes
 app.use("/", ContactRoutes);
 
-app.listen(PORT, () => {
-  console.log(`Server Started Successfully on port, ${PORT}`);
-});
+// Export as serverless function
+export default serverless(app);
