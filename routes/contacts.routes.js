@@ -11,6 +11,12 @@ import {
 
 const router = express.Router();
 
+// Simple test route without database
+router.get("/test", (req, res) => {
+  res.json({ message: "API is working!" });
+});
+
+// Your existing routes
 router.get("/", getContacts);
 router.get("/show-contact/:id", getContact);
 router.get("/add-contact", addContactPage);
