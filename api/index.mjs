@@ -10,7 +10,7 @@ const __dirname = path.dirname(__filename);
 
 const app = express();
 
-// DB connection
+// Database connection
 connectDB();
 
 // Middleware
@@ -23,6 +23,6 @@ app.use(express.json());
 // Routes
 app.use("/", ContactRoutes);
 
-// ❗ No app.listen()
-// Export serverless function
+// ❌ NO app.listen()
+// Export serverless handler
 export const handler = serverless(app);
