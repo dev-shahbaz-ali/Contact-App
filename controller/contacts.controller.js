@@ -1,17 +1,16 @@
 import Contact from "../models/contacts.models.js";
 import mongoose from "mongoose";
-import { paginate } from "mongoose-paginate-v2";
 
 export const getContacts = async (req, res) => {
   try {
     const { page = 1, limit = 6 } = req.query;
 
     const options = {
-      page: page,
-      limit: limit,
+      page: parseInt(page),
+      limit: parseInt(limit),
     };
+
     const result = await Contact.paginate({}, options);
-    // res.send(result);
 
     res.render("home", {
       totalDocs: result.totalDocs,
@@ -26,22 +25,27 @@ export const getContacts = async (req, res) => {
       contacts: result.docs,
     });
   } catch (error) {
-    res.render("500", { message: error });
+    res.render("500", { message: error.message });
   }
 };
 
 export const getContact = async (req, res) => {
-  if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
-    res.render("404", { message: "Invalid Id" });
+  const id = req.params.id;
+
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    return res.render("404", { message: "Invalid Id" });
   }
+
   try {
-    const contact = await Contact.findById(req.params.id);
+    const contact = await Contact.findById(id);
+
     if (!contact) {
-      res.render("404", { message: "Contact Not Found" });
+      return res.render("404", { message: "Contact Not Found" });
     }
+
     res.render("show-contact", { contact });
   } catch (error) {
-    res.render("500", { message: error });
+    res.render("500", { message: error.message });
   }
 };
 
@@ -54,53 +58,69 @@ export const addContact = async (req, res) => {
     await Contact.create(req.body);
     res.redirect("/");
   } catch (error) {
-    res.render("500", { message: error });
+    res.render("500", { message: error.message });
   }
 };
 
 export const updateContactPage = async (req, res) => {
-  if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
-    res.render("404", { message: "Invalid Id" });
+  const id = req.params.id;
+
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    return res.render("404", { message: "Invalid Id" });
   }
 
   try {
-    const contact = await Contact.findById(req.params.id);
+    const contact = await Contact.findById(id);
+
     if (!contact) {
-      res.render("404", { message: "Contact Not Found" });
+      return res.render("404", { message: "Contact Not Found" });
     }
+
     res.render("update-contact", { contact });
   } catch (error) {
-    res.render("500", { message: error });
+    res.render("500", { message: error.message });
   }
 };
 
 export const updateContact = async (req, res) => {
-  if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
-    res.render("404", { message: "Invalid Id" });
+  const id = req.params.id;
+
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    return res.render("404", { message: "Invalid Id" });
   }
 
   try {
-    const contact = await Contact.findByIdAndUpdate(req.params.id, req.body);
+    const contact = await Contact.findByIdAndUpdate(id, req.body, {
+      new: true,
+      runValidators: true, // important!
+    });
+
     if (!contact) {
-      res.render("404", { message: "Contact Not Found" });
+      return res.render("404", { message: "Contact Not Found" });
     }
+
     res.redirect("/");
   } catch (error) {
-    res.render("500", { message: error });
+    res.render("500", { message: error.message });
   }
 };
 
 export const deleteContact = async (req, res) => {
-  if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
-    res.render("404", { message: "Invalid Id" });
+  const id = req.params.id;
+
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    return res.render("404", { message: "Invalid Id" });
   }
+
   try {
-    const contact = await Contact.findByIdAndDelete(req.params.id);
+    const contact = await Contact.findByIdAndDelete(id);
+
     if (!contact) {
-      res.render("404", { message: "Contact Not Found" });
+      return res.render("404", { message: "Contact Not Found" });
     }
+
     res.redirect("/");
   } catch (error) {
-    res.render("500", { message: error });
+    res.render("500", { message: error.message });
   }
 };
