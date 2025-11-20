@@ -4,8 +4,6 @@ import { paginate } from "mongoose-paginate-v2";
 
 export const getContacts = async (req, res) => {
   try {
-    // const contacts = await Contact.find();
-
     const { page = 1, limit = 6 } = req.query;
 
     const options = {
@@ -28,7 +26,7 @@ export const getContacts = async (req, res) => {
       contacts: result.docs,
     });
   } catch (error) {
-    req.render("500", { message: error });
+    res.render("500", { message: error });
   }
 };
 
