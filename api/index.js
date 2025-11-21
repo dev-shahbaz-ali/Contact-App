@@ -1,36 +1,39 @@
 const express = require("express");
 const path = require("path");
+const { connectDB } = require("../config/database.js");
+const Contact = require("../models/contacts.models.js");
 
 const app = express();
 const projectRoot = path.join(__dirname, "..");
 
-// EJS setup
+// Setup
 app.set("view engine", "ejs");
 app.set("views", path.join(projectRoot, "views"));
-
-// Static files
 app.use(express.static(path.join(projectRoot, "public")));
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
-// Simple EJS test
-app.get("/", (req, res) => {
+// Database (non-blocking)
+connectDB();
+
+// Routes
+app.get("/", async (req, res) => {
   try {
+    const contacts = await Contact.find().limit(5);
     res.render("home", {
-      contacts: [
-        { first_name: "John", last_name: "Doe", email: "john@test.com" },
-        { first_name: "Jane", last_name: "Smith", email: "jane@test.com" },
-      ],
-      message: "EJS is working!",
+      contacts: contacts,
+      message: "Database connected!",
     });
   } catch (error) {
-    res.send(`
-      <h1>EJS Error</h1>
-      <p>${error.message}</p>
-    `);
+    res.render("home", {
+      contacts: [],
+      message: "No database connection",
+    });
   }
 });
 
 app.get("/health", (req, res) => {
-  res.json({ status: "OK", message: "EJS test" });
+  res.json({ status: "OK" });
 });
 
 module.exports = app;
