@@ -5,8 +5,12 @@ const connectDB = async () => {
     const mongoURL = process.env.MONGODB_URI;
 
     if (!mongoURL) {
-      throw new Error("No MongoDB URL provided");
+      console.log("❌ No MongoDB URL found in environment variables");
+      console.log("ℹ️ Please set MONGODB_URI in Vercel dashboard");
+      return;
     }
+
+    console.log("🔄 Connecting to MongoDB...");
 
     await mongoose.connect(mongoURL, {
       useNewUrlParser: true,
@@ -17,7 +21,7 @@ const connectDB = async () => {
     console.log("✅ MongoDB connected successfully");
   } catch (error) {
     console.log("❌ MongoDB connection failed:", error.message);
-    // Don't throw - let app continue
+    console.log("🔄 Running in demo mode without database");
   }
 };
 
