@@ -1,49 +1,35 @@
 const Contact = require("../models/contacts.models.js");
-const mongoose = require("mongoose");
+
+// Demo data - app will work without database
+const demoContacts = [
+  {
+    _id: "1",
+    first_name: "John",
+    last_name: "Doe",
+    email: "john@example.com",
+    phone: "123-456-7890",
+    address: "New York",
+  },
+  {
+    _id: "2",
+    first_name: "Jane",
+    last_name: "Smith",
+    email: "jane@example.com",
+    phone: "098-765-4321",
+    address: "London",
+  },
+];
 
 const getContacts = async (req, res) => {
   try {
-    // Check if database is connected
-    if (mongoose.connection.readyState !== 1) {
-      // Show demo data if no database
-      const demoContacts = [
-        {
-          _id: "1",
-          first_name: "John",
-          last_name: "Doe",
-          email: "john@example.com",
-          phone: "123-456-7890",
-          address: "New York",
-        },
-        {
-          _id: "2",
-          first_name: "Jane",
-          last_name: "Smith",
-          email: "jane@example.com",
-          phone: "098-765-4321",
-          address: "London",
-        },
-      ];
+    // Try to get from database, if fails use demo data
+    const contacts = await Contact.find()
+      .limit(10)
+      .catch(() => demoContacts);
 
-      return res.render("home", {
-        contacts: demoContacts,
-        totalDocs: 2,
-        limit: 10,
-        totalPages: 1,
-        currentPage: 1,
-        counter: 1,
-        hasPrevPage: false,
-        hasNextPage: false,
-        prevPage: null,
-        nextPage: null,
-      });
-    }
-
-    // If database connected, get real data
-    const contacts = await Contact.find().limit(10);
     res.render("home", {
-      contacts: contacts,
-      totalDocs: contacts.length,
+      contacts: contacts || demoContacts,
+      totalDocs: (contacts || demoContacts).length,
       limit: 10,
       totalPages: 1,
       currentPage: 1,
@@ -54,21 +40,9 @@ const getContacts = async (req, res) => {
       nextPage: null,
     });
   } catch (error) {
-    // Fallback to demo data
-    const demoContacts = [
-      {
-        _id: "1",
-        first_name: "Demo",
-        last_name: "User",
-        email: "demo@example.com",
-        phone: "000-000-0000",
-        address: "Demo Address",
-      },
-    ];
-
     res.render("home", {
       contacts: demoContacts,
-      totalDocs: 1,
+      totalDocs: demoContacts.length,
       limit: 10,
       totalPages: 1,
       currentPage: 1,
@@ -81,10 +55,16 @@ const getContacts = async (req, res) => {
   }
 };
 
-// Other controller functions same as before...
 const getContact = async (req, res) => {
   try {
-    const contact = await Contact.findById(req.params.id);
+    const contact = await Contact.findById(req.params.id).catch(() =>
+      demoContacts.find((c) => c._id === req.params.id)
+    );
+
+    if (!contact) {
+      return res.redirect("/");
+    }
+
     res.render("show-contact", { contact });
   } catch (error) {
     res.redirect("/");
@@ -97,16 +77,30 @@ const addContactPage = (req, res) => {
 
 const addContact = async (req, res) => {
   try {
-    await Contact.create(req.body);
+    // If database works, save there. Otherwise just redirect
+    await Contact.create(req.body).catch(() => {
+      console.log("Database not available - contact not saved");
+    });
+
     res.redirect("/");
   } catch (error) {
-    res.render("add-contact", { error: "Failed to create contact" });
+    res.render("add-contact", {
+      error: "Please check all fields",
+      formData: req.body,
+    });
   }
 };
 
 const updateContactPage = async (req, res) => {
   try {
-    const contact = await Contact.findById(req.params.id);
+    const contact = await Contact.findById(req.params.id).catch(() =>
+      demoContacts.find((c) => c._id === req.params.id)
+    );
+
+    if (!contact) {
+      return res.redirect("/");
+    }
+
     res.render("update-contact", { contact });
   } catch (error) {
     res.redirect("/");
@@ -115,7 +109,10 @@ const updateContactPage = async (req, res) => {
 
 const updateContact = async (req, res) => {
   try {
-    await Contact.findByIdAndUpdate(req.params.id, req.body);
+    await Contact.findByIdAndUpdate(req.params.id, req.body).catch(() => {
+      console.log("Database not available - contact not updated");
+    });
+
     res.redirect("/");
   } catch (error) {
     res.redirect("/");
@@ -124,7 +121,10 @@ const updateContact = async (req, res) => {
 
 const deleteContact = async (req, res) => {
   try {
-    await Contact.findByIdAndDelete(req.params.id);
+    await Contact.findByIdAndDelete(req.params.id).catch(() => {
+      console.log("Database not available - contact not deleted");
+    });
+
     res.redirect("/");
   } catch (error) {
     res.redirect("/");
