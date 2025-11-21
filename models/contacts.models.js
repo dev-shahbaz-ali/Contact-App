@@ -5,28 +5,28 @@ const contactSchema = mongoose.Schema(
   {
     first_name: {
       type: String,
-      required: false,
+      required: true,
       trim: true,
     },
     last_name: {
       type: String,
-      required: false,
+      required: true,
       trim: true,
     },
     email: {
       type: String,
-      required: false,
+      required: true,
       trim: true,
       lowercase: true,
     },
     phone: {
       type: String,
-      required: false,
+      required: true,
       trim: true,
     },
     address: {
       type: String,
-      required: false,
+      required: true,
       trim: true,
     },
   },
