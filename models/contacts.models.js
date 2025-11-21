@@ -4,28 +4,27 @@ const contactSchema = new mongoose.Schema(
   {
     first_name: {
       type: String,
-      required: true,
+      required: [true, "First name is required"],
       trim: true,
     },
     last_name: {
       type: String,
-      required: true,
+      required: [true, "Last name is required"],
       trim: true,
     },
     email: {
       type: String,
-      required: true,
+      required: [true, "Email is required"],
       trim: true,
       lowercase: true,
     },
     phone: {
       type: String,
-      required: true,
+      required: [true, "Phone is required"],
       trim: true,
     },
     address: {
       type: String,
-      required: true,
       trim: true,
     },
   },
@@ -34,5 +33,4 @@ const contactSchema = new mongoose.Schema(
   }
 );
 
-const Contact = mongoose.model("Contact", contactSchema);
-module.exports = Contact;
+module.exports = mongoose.model("Contact", contactSchema);

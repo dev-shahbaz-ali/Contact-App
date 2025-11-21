@@ -4,16 +4,20 @@ const connectDB = async () => {
   try {
     const mongoURL = process.env.MONGODB_URI;
 
-    if (mongoURL) {
-      await mongoose.connect(mongoURL, {
-        serverSelectionTimeoutMS: 3000,
-      });
-      console.log("Database connected");
-    } else {
-      console.log("No database URL - running in demo mode");
+    if (!mongoURL) {
+      throw new Error("No MongoDB URL provided");
     }
+
+    await mongoose.connect(mongoURL, {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+      serverSelectionTimeoutMS: 5000,
+    });
+
+    console.log("✅ MongoDB connected successfully");
   } catch (error) {
-    console.log("Running without database - demo mode");
+    console.log("❌ MongoDB connection failed:", error.message);
+    // Don't throw - let app continue
   }
 };
 
