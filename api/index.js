@@ -1,17 +1,27 @@
-import express from "express";
-import serverless from "serverless-http";
-import ContactRoutes from "../routes/contacts.routes.js";
-import { connectDB } from "../config/database.js";
-
-connectDB();
+const express = require("express");
+const path = require("path");
+const ContactRoutes = require("../routes/contacts.routes.js");
+const { connectDB } = require("../config/database.js");
 
 const app = express();
+const projectRoot = path.join(__dirname, "..");
+
+// Setup
 app.set("view engine", "ejs");
-app.use(express.urlencoded({ extended: true }));
-app.use(express.static("public"));
+app.set("views", path.join(projectRoot, "views"));
+app.use(express.static(path.join(projectRoot, "public")));
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
+// Database
+connectDB();
+
+// Routes
 app.use("/", ContactRoutes);
 
-app.listen(3000);
+// Health check
+app.get("/health", (req, res) => {
+  res.json({ status: "OK", message: "Server is running" });
+});
 
-export default serverless(app);
+module.exports = app;
