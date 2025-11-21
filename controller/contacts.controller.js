@@ -1,33 +1,32 @@
 import Contact from "../models/contacts.models.js";
-import mongoose, { version } from "mongoose";
+import mongoose from "mongoose";
 import { paginate } from "mongoose-paginate-v2";
 
 export const getContacts = async (req, res) => {
   try {
-    res.send({ success: true, version: "1.0" });
     // const contacts = await Contact.find();
 
-    // const { page = 1, limit = 6 } = req.query;
+    const { page = 1, limit = 6 } = req.query;
 
-    // const options = {
-    //   page: page,
-    //   limit: limit,
-    // };
-    // const result = await Contact.paginate({}, options);
-    // // res.send(result);
+    const options = {
+      page: page,
+      limit: limit,
+    };
+    const result = await Contact.paginate({}, options);
+    // res.send(result);
 
-    // res.render("home", {
-    //   totalDocs: result.totalDocs,
-    //   limit: result.limit,
-    //   totalPages: result.totalPages,
-    //   currentPage: result.page,
-    //   counter: result.pagingCounter,
-    //   hasPrevPage: result.hasPrevPage,
-    //   hasNextPage: result.hasNextPage,
-    //   prevPage: result.prevPage,
-    //   nextPage: result.nextPage,
-    //   contacts: result.docs,
-    // });
+    res.render("home", {
+      totalDocs: result.totalDocs,
+      limit: result.limit,
+      totalPages: result.totalPages,
+      currentPage: result.page,
+      counter: result.pagingCounter,
+      hasPrevPage: result.hasPrevPage,
+      hasNextPage: result.hasNextPage,
+      prevPage: result.prevPage,
+      nextPage: result.nextPage,
+      contacts: result.docs,
+    });
   } catch (error) {
     res.render("500", { message: error });
   }
