@@ -2,23 +2,13 @@ const mongoose = require("mongoose");
 
 const connectDB = async () => {
   try {
-    const mongoURL = process.env.MONGODB_URI || process.env.MONGODB_URL;
-
-    if (!mongoURL) {
-      console.log("No MongoDB URL - running without database");
-      return null;
+    const mongoURL = process.env.MONGODB_URI;
+    if (mongoURL) {
+      await mongoose.connect(mongoURL);
+      console.log("MongoDB connected");
     }
-
-    const conn = await mongoose.connect(mongoURL, {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-    });
-
-    console.log("MongoDB connected successfully");
-    return conn;
   } catch (error) {
-    console.log("MongoDB connection failed - running without database");
-    return null;
+    // Silent fail
   }
 };
 

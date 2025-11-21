@@ -4,14 +4,13 @@ const mongoose = require("mongoose");
 const getContacts = async (req, res) => {
   try {
     const contacts = await Contact.find().limit(10);
-
     res.render("home", {
-      contacts: contacts || [],
+      contacts: contacts,
       totalDocs: contacts.length,
       limit: 10,
       totalPages: 1,
       currentPage: 1,
-      counter: 1, // ✅ COUNTER ADD KAR DIYA
+      counter: 1,
       hasPrevPage: false,
       hasNextPage: false,
       prevPage: null,
@@ -24,7 +23,7 @@ const getContacts = async (req, res) => {
       limit: 10,
       totalPages: 0,
       currentPage: 1,
-      counter: 1, // ✅ COUNTER ADD KAR DIYA
+      counter: 1,
       hasPrevPage: false,
       hasNextPage: false,
       prevPage: null,
@@ -36,9 +35,6 @@ const getContacts = async (req, res) => {
 const getContact = async (req, res) => {
   try {
     const contact = await Contact.findById(req.params.id);
-    if (!contact) {
-      return res.redirect("/");
-    }
     res.render("show-contact", { contact });
   } catch (error) {
     res.redirect("/");
@@ -54,18 +50,13 @@ const addContact = async (req, res) => {
     await Contact.create(req.body);
     res.redirect("/");
   } catch (error) {
-    res.render("add-contact", {
-      error: "Failed to create contact",
-    });
+    res.render("add-contact", { error: "Failed" });
   }
 };
 
 const updateContactPage = async (req, res) => {
   try {
     const contact = await Contact.findById(req.params.id);
-    if (!contact) {
-      return res.redirect("/");
-    }
     res.render("update-contact", { contact });
   } catch (error) {
     res.redirect("/");

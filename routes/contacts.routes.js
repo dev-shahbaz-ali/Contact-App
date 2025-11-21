@@ -1,12 +1,12 @@
 const express = require("express");
 const {
-  addContact,
-  addContactPage,
-  deleteContact,
-  getContact,
   getContacts,
-  updateContact,
+  getContact,
+  addContactPage,
+  addContact,
   updateContactPage,
+  updateContact,
+  deleteContact,
 } = require("../controller/contacts.controller.js");
 
 const router = express.Router();
