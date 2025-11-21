@@ -4,15 +4,31 @@ const mongoose = require("mongoose");
 const getContacts = async (req, res) => {
   try {
     const contacts = await Contact.find().limit(10);
+
     res.render("home", {
-      contacts: contacts,
+      contacts: contacts || [],
       totalDocs: contacts.length,
+      limit: 10,
+      totalPages: 1,
       currentPage: 1,
+      counter: 1, // ✅ COUNTER ADD KAR DIYA
+      hasPrevPage: false,
+      hasNextPage: false,
+      prevPage: null,
+      nextPage: null,
     });
   } catch (error) {
     res.render("home", {
       contacts: [],
-      error: "Failed to load contacts",
+      totalDocs: 0,
+      limit: 10,
+      totalPages: 0,
+      currentPage: 1,
+      counter: 1, // ✅ COUNTER ADD KAR DIYA
+      hasPrevPage: false,
+      hasNextPage: false,
+      prevPage: null,
+      nextPage: null,
     });
   }
 };

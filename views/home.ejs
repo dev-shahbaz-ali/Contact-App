@@ -28,10 +28,9 @@
                 </tr>
               </thead>
               <tbody>
-                <% let srno = counter %>
-                <% contacts.forEach((contact )=> { %>
+                <% contacts.forEach((contact, index )=> { %>
                 <tr>
-                  <td><%= counter++ %></td>
+                  <td><%= index + 1 %></td>
                   <td><%= contact.first_name %></td>
                   <td><%= contact.last_name %></td>
                   <td><%= contact.email %></td>
