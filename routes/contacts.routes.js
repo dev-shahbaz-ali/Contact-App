@@ -11,7 +11,6 @@ const {
 
 const router = express.Router();
 
-// All contact routes
 router.get("/", getContacts);
 router.get("/show-contact/:id", getContact);
 router.get("/add-contact", addContactPage);

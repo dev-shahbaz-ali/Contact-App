@@ -5,23 +5,20 @@ const connectDB = async () => {
     const mongoURL = process.env.MONGODB_URI;
 
     if (!mongoURL) {
-      console.log("❌ No MongoDB URL found in environment variables");
-      console.log("ℹ️ Please set MONGODB_URI in Vercel dashboard");
-      return;
+      console.log("No MongoDB URL - running without database");
+      return null;
     }
 
-    console.log("🔄 Connecting to MongoDB...");
-
-    await mongoose.connect(mongoURL, {
+    const conn = await mongoose.connect(mongoURL, {
       useNewUrlParser: true,
       useUnifiedTopology: true,
-      serverSelectionTimeoutMS: 5000,
     });
 
-    console.log("✅ MongoDB connected successfully");
+    console.log("MongoDB connected successfully");
+    return conn;
   } catch (error) {
-    console.log("❌ MongoDB connection failed:", error.message);
-    console.log("🔄 Running in demo mode without database");
+    console.log("MongoDB connection failed - running without database");
+    return null;
   }
 };
 
