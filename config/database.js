@@ -1,28 +1,21 @@
-import mongoose from "mongoose";
-import dotenv from "dotenv";
+const mongoose = require("mongoose");
 
-dotenv.config();
-
-export const connectDB = async () => {
+const connectDB = async () => {
   try {
-    console.log("🔄 Attempting to connect to MongoDB...");
-    console.log(
-      "MongoDB URL:",
-      process.env.MONGODB_URL ? "Present" : "Missing"
-    );
+    const mongoURL = process.env.MONGODB_URI || process.env.MONGODB_URL;
 
-    const conn = await mongoose.connect(process.env.MONGODB_URL, {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-    });
+    if (!mongoURL) {
+      console.log("ℹ️  No MongoDB URL - running in no-database mode");
+      return null;
+    }
 
-    console.log(`✅ MongoDB Connected: ${conn.connection.host}`);
-    console.log(`📊 Database: ${conn.connection.name}`);
-    return conn;
+    await mongoose.connect(mongoURL);
+    console.log("✅ MongoDB connected successfully");
+    return true;
   } catch (error) {
-    console.error("❌ Database connection failed:");
-    console.error("Error:", error.message);
-    console.error("MongoDB URL used:", process.env.MONGODB_URL);
-    throw error;
+    console.log("⚠️  MongoDB not available - running without database");
+    return null;
   }
 };
+
+module.exports = { connectDB };

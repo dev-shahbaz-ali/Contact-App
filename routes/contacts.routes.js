@@ -1,5 +1,6 @@
-import express from "express";
-import {
+const express = require("express");
+const router = express.Router();
+const {
   addContact,
   addContactPage,
   deleteContact,
@@ -7,8 +8,7 @@ import {
   getContacts,
   updateContact,
   updateContactPage,
-} from "../controller/contacts.controller.js";
-const router = express.Router();
+} = require("../controllers/contacts.controller.js"); // Changed to "controllers"
 
 router.get("/", getContacts);
 router.get("/show-contact/:id", getContact);
@@ -18,4 +18,4 @@ router.get("/update-contact/:id", updateContactPage);
 router.post("/update-contact/:id", updateContact);
 router.get("/delete-contact/:id", deleteContact);
 
-export default router;
+module.exports = router;
