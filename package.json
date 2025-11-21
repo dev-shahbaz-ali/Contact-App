@@ -4,8 +4,10 @@
   "main": "api/index.js",
   "type": "module",
   "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "nodemon api/index.js",
-    "start": "node api/index.js"
+    "start": "node api/index.js",
+    "vercel-build": "node api/index.js"
   },
   "keywords": [],
   "author": "",
@@ -17,10 +19,8 @@
     "express": "^5.1.0",
     "mongoose": "^8.19.3",
     "mongoose-paginate-v2": "^1.9.1",
+    "nodemon": "^3.1.11",
     "serverless-http": "^4.0.0"
-  },
-  "devDependencies": {
-    "nodemon": "^3.1.11"
   },
   "engines": {
     "node": ">=18"
