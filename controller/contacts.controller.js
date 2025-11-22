@@ -3,25 +3,35 @@ const mongoose = require("mongoose");
 
 const getContacts = async (req, res) => {
   try {
-    const contacts = await Contact.find().limit(10);
+    const demoContacts = [
+      // Yahan aapke 10 demo contacts
+    ];
+
+    const page = parseInt(req.query.page) || 1;
+    const limit = 3; // 3 contacts per page
+    const startIndex = (page - 1) * limit;
+    const endIndex = startIndex + limit;
+
+    const paginatedContacts = demoContacts.slice(startIndex, endIndex);
+    const totalPages = Math.ceil(demoContacts.length / limit);
+
     res.render("home", {
-      contacts: contacts,
-      totalDocs: contacts.length,
-      limit: 10,
-      totalPages: 1,
-      currentPage: 1,
-      counter: 1,
-      hasPrevPage: false,
-      hasNextPage: false,
-      prevPage: null,
-      nextPage: null,
+      contacts: paginatedContacts,
+      totalDocs: demoContacts.length,
+      limit: limit,
+      totalPages: totalPages, // ✅ Real total pages (e.g., 4 pages for 10 contacts)
+      currentPage: page,
+      counter: startIndex + 1,
+      hasPrevPage: page > 1,
+      hasNextPage: page < totalPages,
+      prevPage: page > 1 ? page - 1 : null,
+      nextPage: page < totalPages ? page + 1 : null,
     });
   } catch (error) {
     res.render("home", {
       contacts: [],
       totalDocs: 0,
-      limit: 10,
-      totalPages: 0,
+      totalPages: 0, // ✅ 0 pages when no contacts
       currentPage: 1,
       counter: 1,
       hasPrevPage: false,
