@@ -4,22 +4,24 @@ const mongoose = require("mongoose");
 const getContacts = async (req, res) => {
   try {
     const page = parseInt(req.query.page) || 1;
-    const limit = 1; // ✅ 1 contact per page - more pages
+    const limit = 5; // 5 contacts per page
     const skip = (page - 1) * limit;
 
+    // Get total contacts count and paginated contacts
     const totalContacts = await Contact.countDocuments();
     const contacts = await Contact.find()
       .sort({ createdAt: -1 })
       .skip(skip)
       .limit(limit);
 
+    // Calculate total pages
     const totalPages = Math.ceil(totalContacts / limit);
 
     res.render("home", {
       contacts: contacts,
       totalDocs: totalContacts,
       limit: limit,
-      totalPages: totalPages, // ✅ Ab zyada pages honge
+      totalPages: totalPages, // ✅ Real total pages
       currentPage: page,
       counter: skip + 1,
       hasPrevPage: page > 1,
@@ -28,11 +30,12 @@ const getContacts = async (req, res) => {
       nextPage: page < totalPages ? page + 1 : null,
     });
   } catch (error) {
+    // If database fails, show empty state
     res.render("home", {
       contacts: [],
       totalDocs: 0,
-      limit: 1,
-      totalPages: 0,
+      limit: 5,
+      totalPages: 0, // ✅ 0 pages when no contacts
       currentPage: 1,
       counter: 1,
       hasPrevPage: false,
