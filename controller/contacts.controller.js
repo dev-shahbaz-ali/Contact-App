@@ -7,35 +7,32 @@ const getContacts = async (req, res) => {
     const limit = 5; // 5 contacts per page
     const skip = (page - 1) * limit;
 
-    // Get total contacts count and paginated contacts
     const totalContacts = await Contact.countDocuments();
     const contacts = await Contact.find()
       .sort({ createdAt: -1 })
       .skip(skip)
       .limit(limit);
 
-    // Calculate total pages
     const totalPages = Math.ceil(totalContacts / limit);
 
     res.render("home", {
       contacts: contacts,
       totalDocs: totalContacts,
       limit: limit,
-      totalPages: totalPages, // ✅ Real total pages
+      totalPages: totalPages,
       currentPage: page,
-      counter: skip + 1,
+      counter: skip + 1, // ✅ Ye sahi hai: Page 1=1, Page 2=6, Page 3=11
       hasPrevPage: page > 1,
       hasNextPage: page < totalPages,
       prevPage: page > 1 ? page - 1 : null,
       nextPage: page < totalPages ? page + 1 : null,
     });
   } catch (error) {
-    // If database fails, show empty state
     res.render("home", {
       contacts: [],
       totalDocs: 0,
       limit: 5,
-      totalPages: 0, // ✅ 0 pages when no contacts
+      totalPages: 0,
       currentPage: 1,
       counter: 1,
       hasPrevPage: false,

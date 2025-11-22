@@ -30,7 +30,7 @@
               <tbody>
                 <% contacts.forEach((contact, index )=> { %>
                 <tr>
-                  <td><%= index + 1 %></td>
+           <td><%= (currentPage - 1) * limit + index + 1 %></td>
                   <td><%= contact.first_name %></td>
                   <td><%= contact.last_name %></td>
                   <td><%= contact.email %></td>
