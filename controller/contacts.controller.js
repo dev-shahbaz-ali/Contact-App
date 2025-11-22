@@ -3,34 +3,38 @@ const mongoose = require("mongoose");
 
 const getContacts = async (req, res) => {
   try {
-    const demoContacts = [
-      // Yahan aapke 10 demo contacts
-    ];
-
     const page = parseInt(req.query.page) || 1;
-    const limit = 3; // 3 contacts per page
-    const startIndex = (page - 1) * limit;
-    const endIndex = startIndex + limit;
+    const limit = 5; // 5 contacts per page
+    const skip = (page - 1) * limit;
 
-    const paginatedContacts = demoContacts.slice(startIndex, endIndex);
-    const totalPages = Math.ceil(demoContacts.length / limit);
+    // Get total contacts count and paginated contacts
+    const totalContacts = await Contact.countDocuments();
+    const contacts = await Contact.find()
+      .sort({ createdAt: -1 })
+      .skip(skip)
+      .limit(limit);
+
+    // Calculate total pages
+    const totalPages = Math.ceil(totalContacts / limit);
 
     res.render("home", {
-      contacts: paginatedContacts,
-      totalDocs: demoContacts.length,
+      contacts: contacts,
+      totalDocs: totalContacts,
       limit: limit,
-      totalPages: totalPages, // ✅ Real total pages (e.g., 4 pages for 10 contacts)
+      totalPages: totalPages, // ✅ Real total pages
       currentPage: page,
-      counter: startIndex + 1,
+      counter: skip + 1,
       hasPrevPage: page > 1,
       hasNextPage: page < totalPages,
       prevPage: page > 1 ? page - 1 : null,
       nextPage: page < totalPages ? page + 1 : null,
     });
   } catch (error) {
+    // If database fails, show empty state
     res.render("home", {
       contacts: [],
       totalDocs: 0,
+      limit: 5,
       totalPages: 0, // ✅ 0 pages when no contacts
       currentPage: 1,
       counter: 1,
