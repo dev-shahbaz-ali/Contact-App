@@ -8,7 +8,7 @@ const getContacts = async (req, res) => {
       contacts: contacts,
       totalDocs: contacts.length,
       limit: 10,
-      totalPages: 1,
+      totalPages: contacts.length > 0 ? 1 : 0,
       currentPage: 1,
       counter: 1,
       hasPrevPage: false,
