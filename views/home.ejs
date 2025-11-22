@@ -59,7 +59,7 @@
                 <% }); %>
               </tbody>
             </table>
-
+<% if (totalPages > 1) { %>
             <nav>
               <ul class="pagination justify-content-center">
                 <li class="page-item <%= hasPrevPage ? "" : "disabled"; %>">
@@ -83,6 +83,7 @@
                 </li>
               </ul>
             </nav>
+            <% }  %>
           </div>
         </div>
       </div>
