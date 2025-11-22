@@ -59,7 +59,13 @@
                 <% }); %>
               </tbody>
             </table>
-<% if (contacts.length > 0 && totalPages > 1) { %>
+<% if (contacts.length === 0) { %>
+  <div class="alert alert-info text-center">
+    <h4>No Contacts Found</h4>
+    <p>Start by adding your first contact!</p>
+    <a href="/add-contact" class="btn btn-primary">Add First Contact</a>
+  </div>
+<% } else if (totalPages > 1) { %>
             <nav>
               <ul class="pagination justify-content-center">
                 <li class="page-item <%= hasPrevPage ? "" : "disabled"; %>">
