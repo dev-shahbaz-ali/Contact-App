@@ -59,37 +59,31 @@
                 <% }); %>
               </tbody>
             </table>
-<% if (contacts.length === 0) { %>
-  <div class="alert alert-info text-center">
-    <h4>No Contacts Found</h4>
-    <p>Start by adding your first contact!</p>
-    <a href="/add-contact" class="btn btn-primary">Add First Contact</a>
-  </div>
-<% } else if (totalPages > 1) { %>
-            <nav>
-              <ul class="pagination justify-content-center">
-                <li class="page-item <%= hasPrevPage ? "" : "disabled"; %>">
-                  <a
-                    class="page-link"
-                    href="/?page=<%= prevPage %>"
-                    tabindex="-1"
-                    aria-disabled="true"
-                    >Previous</a
-                  >
-                </li>
-                <% for (let i = 1; i <= totalPages; i++) {
-                  let active = currentPage === i ? "active" : ""; 
-                  %>
-                <li class="page-item <%= active %>">
-                  <a class="page-link" href="/?page=<%= i %>"><%= i %></a>
-                </li>
-                <% } %>
-                <li class="page-item <%= hasNextPage ? "" : "disabled" %>">
-                  <a class="page-link" href="/?page=<%= nextPage %>">Next</a>
-                </li>
-              </ul>
-            </nav>
-            <% }  %>
+<% if (contacts.length >= 1) { %>
+  <nav>
+    <ul class="pagination justify-content-center">
+      <li class="page-item <%= hasPrevPage ? "" : "disabled"; %>">
+        <a
+          class="page-link"
+          href="/?page=<%= prevPage %>"
+          tabindex="-1"
+          aria-disabled="true"
+          >Previous</a
+        >
+      </li>
+      <% for (let i = 1; i <= totalPages; i++) {
+        let active = currentPage === i ? "active" : ""; 
+        %>
+      <li class="page-item <%= active %>">
+        <a class="page-link" href="/?page=<%= i %>"><%= i %></a>
+      </li>
+      <% } %>
+      <li class="page-item <%= hasNextPage ? "" : "disabled" %>">
+        <a class="page-link" href="/?page=<%= nextPage %>">Next</a>
+      </li>
+    </ul>
+  </nav>
+<% } %>
           </div>
         </div>
       </div>
