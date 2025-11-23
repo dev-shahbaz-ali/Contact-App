@@ -85,7 +85,11 @@
                   <hr />
                   <div class="form-group row mb-0">
                     <div class="col-md-9 offset-md-3">
-                      <button type="submit" class="btn btn-primary">
+                      <button
+                        type="submit"
+                        class="btn btn-primary"
+                        onclick="if([...document.querySelectorAll('[required]')].some(f=>!f.value.trim())){alert('Please fill all fields!');return false;}alert('New contact added successfully!');return true;"
+                      >
                         Save
                       </button>
                       <a href="/" class="btn btn-outline-secondary">Cancel</a>
