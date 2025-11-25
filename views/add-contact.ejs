@@ -9,47 +9,13 @@
           <div class="card-header card-title">
             <strong>Add New Contact</strong>
           </div>
-
-          <!-- Error Alert -->
-          <% if (error) { %>
-          <div
-            class="alert alert-danger alert-dismissible fade show m-3"
-            role="alert"
-          >
-            <i class="fas fa-exclamation-triangle me-2"></i>
-            <%= error %>
-            <button
-              type="button"
-              class="btn-close"
-              data-bs-dismiss="alert"
-            ></button>
-          </div>
-          <% } %>
-
-          <!-- Success Message from URL -->
-          <% if (typeof success !== 'undefined' && success) { %>
-          <div
-            class="alert alert-success alert-dismissible fade show m-3"
-            role="alert"
-          >
-            <i class="fas fa-check-circle me-2"></i>
-            Contact added successfully!
-            <button
-              type="button"
-              class="btn-close"
-              data-bs-dismiss="alert"
-            ></button>
-          </div>
-          <% } %>
-
           <form action="/add-contact" method="POST" autocomplete="off">
             <div class="card-body">
               <div class="row">
                 <div class="col-md-12">
-                  <!-- First Name -->
                   <div class="form-group row">
                     <label for="first_name" class="col-md-3 col-form-label"
-                      >First Name *</label
+                      >First Name</label
                     >
                     <div class="col-md-9">
                       <input
@@ -57,16 +23,13 @@
                         name="first_name"
                         id="first_name"
                         class="form-control"
-                        value="<%= formData ? formData.first_name : '' %>"
-                        required
                       />
                     </div>
                   </div>
 
-                  <!-- Last Name -->
                   <div class="form-group row">
                     <label for="last_name" class="col-md-3 col-form-label"
-                      >Last Name *</label
+                      >Last Name</label
                     >
                     <div class="col-md-9">
                       <input
@@ -74,33 +37,27 @@
                         name="last_name"
                         id="last_name"
                         class="form-control"
-                        value="<%= formData ? formData.last_name : '' %>"
-                        required
                       />
                     </div>
                   </div>
 
-                  <!-- Email -->
                   <div class="form-group row">
                     <label for="email" class="col-md-3 col-form-label"
-                      >Email *</label
+                      >Email</label
                     >
                     <div class="col-md-9">
                       <input
-                        type="email"
+                        type="text"
                         name="email"
                         id="email"
                         class="form-control"
-                        value="<%= formData ? formData.email : '' %>"
-                        required
                       />
                     </div>
                   </div>
 
-                  <!-- Phone -->
                   <div class="form-group row">
                     <label for="phone" class="col-md-3 col-form-label"
-                      >Phone *</label
+                      >Phone</label
                     >
                     <div class="col-md-9">
                       <input
@@ -108,15 +65,12 @@
                         name="phone"
                         id="phone"
                         class="form-control"
-                        value="<%= formData ? formData.phone : '' %>"
-                        required
                       />
                     </div>
                   </div>
 
-                  <!-- Address -->
                   <div class="form-group row">
-                    <label for="address" class="col-md-3 col-form-label"
+                    <label for="name" class="col-md-3 col-form-label"
                       >Address</label
                     >
                     <div class="col-md-9">
@@ -125,12 +79,9 @@
                         id="address"
                         rows="3"
                         class="form-control"
-                      >
-<%= formData ? formData.address : '' %></textarea
-                      >
+                      ></textarea>
                     </div>
                   </div>
-
                   <hr />
                   <div class="form-group row mb-0">
                     <div class="col-md-9 offset-md-3">
@@ -149,19 +100,4 @@
     </div>
   </div>
 </main>
-
-<script>
-  // Auto-hide alerts after 5 seconds
-  document.addEventListener("DOMContentLoaded", function () {
-    const alerts = document.querySelectorAll(".alert");
-    alerts.forEach((alert) => {
-      setTimeout(() => {
-        if (alert.parentNode) {
-          alert.remove();
-        }
-      }, 5000);
-    });
-  });
-</script>
-
 <%- include("partials/footer.ejs") %>
