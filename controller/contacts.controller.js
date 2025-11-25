@@ -1,5 +1,4 @@
 const Contact = require("../models/contacts.models.js");
-const mongoose = require("mongoose");
 
 const getContacts = async (req, res) => {
   try {
@@ -31,7 +30,7 @@ const getContacts = async (req, res) => {
     res.render("home", {
       contacts: [],
       totalDocs: 0,
-      limit: limit,
+      limit: 5,
       totalPages: 0,
       currentPage: 1,
       counter: 1,
@@ -53,44 +52,40 @@ const getContact = async (req, res) => {
 };
 
 const addContactPage = (req, res) => {
-  res.render("add-contact");
+  res.render("add-contact", {
+    error: null,
+    formData: null,
+    success: null,
+  });
 };
 
-// In your addContact controller
 const addContact = async (req, res) => {
   try {
-    const errors = validationResult(req);
+    const { first_name, last_name, email, phone, address } = req.body;
 
-    if (!errors.isEmpty()) {
-      // Convert errors to field-specific format
-      const fieldErrors = {};
-      errors.array().forEach((error) => {
-        fieldErrors[error.path] = error.msg;
-      });
-
+    // Simple validation
+    if (!first_name || !last_name || !email || !phone) {
       return res.render("add-contact", {
-        errors: errors.array(),
-        fieldErrors: fieldErrors,
+        error: "All fields are required except address",
         formData: req.body,
-        success: false,
+        success: null,
       });
     }
 
-    // Save contact logic here
     await Contact.create(req.body);
+    res.redirect("/?success=true");
+  } catch (error) {
+    let errorMessage = "Failed to create contact";
+
+    // Handle duplicate email error
+    if (error.code === 11000) {
+      errorMessage = "Email already exists";
+    }
 
     res.render("add-contact", {
-      success: true,
-      formData: {},
-      errors: null,
-      fieldErrors: null,
-    });
-  } catch (error) {
-    res.render("add-contact", {
-      errors: [{ msg: "Error saving contact" }],
+      error: errorMessage,
       formData: req.body,
-      success: false,
-      fieldErrors: null,
+      success: null,
     });
   }
 };
