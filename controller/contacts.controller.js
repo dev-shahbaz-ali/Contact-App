@@ -4,7 +4,7 @@ const mongoose = require("mongoose");
 const getContacts = async (req, res) => {
   try {
     const page = parseInt(req.query.page) || 1;
-    const limit = 5; // 5 contacts per page
+    const limit = 5;
     const skip = (page - 1) * limit;
 
     const totalContacts = await Contact.countDocuments();
@@ -21,7 +21,7 @@ const getContacts = async (req, res) => {
       limit: limit,
       totalPages: totalPages,
       currentPage: page,
-      counter: skip + 1, // ✅ Ye sahi hai: Page 1=1, Page 2=6, Page 3=11
+      counter: skip + 1,
       hasPrevPage: page > 1,
       hasNextPage: page < totalPages,
       prevPage: page > 1 ? page - 1 : null,
@@ -31,7 +31,7 @@ const getContacts = async (req, res) => {
     res.render("home", {
       contacts: [],
       totalDocs: 0,
-      limit: 5,
+      limit: limit,
       totalPages: 0,
       currentPage: 1,
       counter: 1,
@@ -56,12 +56,42 @@ const addContactPage = (req, res) => {
   res.render("add-contact");
 };
 
+// In your addContact controller
 const addContact = async (req, res) => {
   try {
+    const errors = validationResult(req);
+
+    if (!errors.isEmpty()) {
+      // Convert errors to field-specific format
+      const fieldErrors = {};
+      errors.array().forEach((error) => {
+        fieldErrors[error.path] = error.msg;
+      });
+
+      return res.render("add-contact", {
+        errors: errors.array(),
+        fieldErrors: fieldErrors,
+        formData: req.body,
+        success: false,
+      });
+    }
+
+    // Save contact logic here
     await Contact.create(req.body);
-    res.redirect("/");
+
+    res.render("add-contact", {
+      success: true,
+      formData: {},
+      errors: null,
+      fieldErrors: null,
+    });
   } catch (error) {
-    res.render("add-contact", { error: "Failed to create contact" });
+    res.render("add-contact", {
+      errors: [{ msg: "Error saving contact" }],
+      formData: req.body,
+      success: false,
+      fieldErrors: null,
+    });
   }
 };
 

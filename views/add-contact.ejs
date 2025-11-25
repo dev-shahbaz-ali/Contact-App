@@ -9,10 +9,122 @@
           <div class="card-header card-title">
             <strong>Add New Contact</strong>
           </div>
-          <form action="/add-contact" method="POST" autocomplete="off">
+
+          <!-- Success Alert -->
+          <% if (success) { %>
+          <div
+            class="alert alert-success alert-dismissible fade show m-3"
+            role="alert"
+          >
+            <i class="fas fa-check-circle me-2"></i>
+            Contact added successfully!
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="alert"
+            ></button>
+          </div>
+          <% } %>
+
+          <!-- Error Alert -->
+          <% if (errors && errors.length > 0) { %>
+          <div
+            class="alert alert-danger alert-dismissible fade show m-3"
+            role="alert"
+          >
+            <i class="fas fa-exclamation-triangle me-2"></i>
+            <strong>Please fix the following errors:</strong>
+            <ul class="mb-0 mt-2">
+              <% errors.forEach(error => { %>
+              <li><%= error.msg %></li>
+              <% }); %>
+            </ul>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="alert"
+            ></button>
+          </div>
+          <% } %>
+
+          <!-- Field-specific Error Alerts -->
+          <% if (fieldErrors) { %> <% if (fieldErrors.first_name) { %>
+          <div
+            class="alert alert-warning alert-dismissible fade show m-3"
+            role="alert"
+          >
+            <i class="fas fa-exclamation-circle me-2"></i>
+            <strong>First Name Error:</strong> <%= fieldErrors.first_name %>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="alert"
+            ></button>
+          </div>
+          <% } %> <% if (fieldErrors.last_name) { %>
+          <div
+            class="alert alert-warning alert-dismissible fade show m-3"
+            role="alert"
+          >
+            <i class="fas fa-exclamation-circle me-2"></i>
+            <strong>Last Name Error:</strong> <%= fieldErrors.last_name %>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="alert"
+            ></button>
+          </div>
+          <% } %> <% if (fieldErrors.email) { %>
+          <div
+            class="alert alert-warning alert-dismissible fade show m-3"
+            role="alert"
+          >
+            <i class="fas fa-exclamation-circle me-2"></i>
+            <strong>Email Error:</strong> <%= fieldErrors.email %>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="alert"
+            ></button>
+          </div>
+          <% } %> <% if (fieldErrors.phone) { %>
+          <div
+            class="alert alert-warning alert-dismissible fade show m-3"
+            role="alert"
+          >
+            <i class="fas fa-exclamation-circle me-2"></i>
+            <strong>Phone Error:</strong> <%= fieldErrors.phone %>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="alert"
+            ></button>
+          </div>
+          <% } %> <% if (fieldErrors.address) { %>
+          <div
+            class="alert alert-warning alert-dismissible fade show m-3"
+            role="alert"
+          >
+            <i class="fas fa-exclamation-circle me-2"></i>
+            <strong>Address Error:</strong> <%= fieldErrors.address %>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="alert"
+            ></button>
+          </div>
+          <% } %> <% } %>
+
+          <form
+            action="/add-contact"
+            method="POST"
+            autocomplete="off"
+            id="contactForm"
+          >
             <div class="card-body">
               <div class="row">
                 <div class="col-md-12">
+                  <!-- First Name Field -->
                   <div class="form-group row">
                     <label for="first_name" class="col-md-3 col-form-label"
                       >First Name</label
@@ -22,11 +134,19 @@
                         type="text"
                         name="first_name"
                         id="first_name"
-                        class="form-control"
+                        class="form-control <%= (fieldErrors && fieldErrors.first_name) ? 'is-invalid' : '' %>"
+                        value="<%= formData ? formData.first_name : '' %>"
+                        required
                       />
+                      <% if (fieldErrors && fieldErrors.first_name) { %>
+                      <div class="invalid-feedback">
+                        <%= fieldErrors.first_name %>
+                      </div>
+                      <% } %>
                     </div>
                   </div>
 
+                  <!-- Last Name Field -->
                   <div class="form-group row">
                     <label for="last_name" class="col-md-3 col-form-label"
                       >Last Name</label
@@ -36,41 +156,65 @@
                         type="text"
                         name="last_name"
                         id="last_name"
-                        class="form-control"
+                        class="form-control <%= (fieldErrors && fieldErrors.last_name) ? 'is-invalid' : '' %>"
+                        value="<%= formData ? formData.last_name : '' %>"
+                        required
                       />
+                      <% if (fieldErrors && fieldErrors.last_name) { %>
+                      <div class="invalid-feedback">
+                        <%= fieldErrors.last_name %>
+                      </div>
+                      <% } %>
                     </div>
                   </div>
 
+                  <!-- Email Field -->
                   <div class="form-group row">
                     <label for="email" class="col-md-3 col-form-label"
                       >Email</label
                     >
                     <div class="col-md-9">
                       <input
-                        type="text"
+                        type="email"
                         name="email"
                         id="email"
-                        class="form-control"
+                        class="form-control <%= (fieldErrors && fieldErrors.email) ? 'is-invalid' : '' %>"
+                        value="<%= formData ? formData.email : '' %>"
+                        required
                       />
+                      <% if (fieldErrors && fieldErrors.email) { %>
+                      <div class="invalid-feedback">
+                        <%= fieldErrors.email %>
+                      </div>
+                      <% } %>
                     </div>
                   </div>
 
+                  <!-- Phone Field -->
                   <div class="form-group row">
                     <label for="phone" class="col-md-3 col-form-label"
                       >Phone</label
                     >
                     <div class="col-md-9">
                       <input
-                        type="text"
+                        type="tel"
                         name="phone"
                         id="phone"
-                        class="form-control"
+                        class="form-control <%= (fieldErrors && fieldErrors.phone) ? 'is-invalid' : '' %>"
+                        value="<%= formData ? formData.phone : '' %>"
+                        required
                       />
+                      <% if (fieldErrors && fieldErrors.phone) { %>
+                      <div class="invalid-feedback">
+                        <%= fieldErrors.phone %>
+                      </div>
+                      <% } %>
                     </div>
                   </div>
 
+                  <!-- Address Field -->
                   <div class="form-group row">
-                    <label for="name" class="col-md-3 col-form-label"
+                    <label for="address" class="col-md-3 col-form-label"
                       >Address</label
                     >
                     <div class="col-md-9">
@@ -78,17 +222,27 @@
                         name="address"
                         id="address"
                         rows="3"
-                        class="form-control"
-                      ></textarea>
+                        class="form-control <%= (fieldErrors && fieldErrors.address) ? 'is-invalid' : '' %>"
+                      >
+<%= formData ? formData.address : '' %></textarea
+                      >
+                      <% if (fieldErrors && fieldErrors.address) { %>
+                      <div class="invalid-feedback">
+                        <%= fieldErrors.address %>
+                      </div>
+                      <% } %>
                     </div>
                   </div>
+
                   <hr />
                   <div class="form-group row mb-0">
                     <div class="col-md-9 offset-md-3">
                       <button type="submit" class="btn btn-primary">
-                        Save
+                        <i class="fas fa-save me-2"></i>Save
                       </button>
-                      <a href="/" class="btn btn-outline-secondary">Cancel</a>
+                      <a href="/" class="btn btn-outline-secondary">
+                        <i class="fas fa-times me-2"></i>Cancel
+                      </a>
                     </div>
                   </div>
                 </div>
@@ -100,4 +254,70 @@
     </div>
   </div>
 </main>
+
+<!-- Add Font Awesome for icons -->
+<link
+  rel="stylesheet"
+  href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+/>
+
+<script>
+  // Auto-hide alerts after 5 seconds
+  document.addEventListener("DOMContentLoaded", function () {
+    const alerts = document.querySelectorAll(".alert");
+    alerts.forEach((alert) => {
+      setTimeout(() => {
+        const bsAlert = new bootstrap.Alert(alert);
+        bsAlert.close();
+      }, 5000);
+    });
+
+    // Real-time validation
+    const form = document.getElementById("contactForm");
+    const inputs = form.querySelectorAll("input[required], textarea[required]");
+
+    inputs.forEach((input) => {
+      input.addEventListener("blur", function () {
+        if (!this.value.trim()) {
+          this.classList.add("is-invalid");
+        } else {
+          this.classList.remove("is-invalid");
+        }
+      });
+    });
+
+    // Form submission validation
+    form.addEventListener("submit", function (e) {
+      let hasErrors = false;
+      inputs.forEach((input) => {
+        if (!input.value.trim()) {
+          input.classList.add("is-invalid");
+          hasErrors = true;
+        }
+      });
+
+      if (hasErrors) {
+        e.preventDefault();
+        // Show a quick alert
+        const alertDiv = document.createElement("div");
+        alertDiv.className =
+          "alert alert-warning alert-dismissible fade show position-fixed top-0 start-50 translate-middle-x mt-3";
+        alertDiv.innerHTML = `
+        <i class="fas fa-exclamation-triangle me-2"></i>
+        Please fill all required fields!
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+      `;
+        document.body.appendChild(alertDiv);
+
+        // Auto remove after 3 seconds
+        setTimeout(() => {
+          if (alertDiv.parentNode) {
+            alertDiv.parentNode.removeChild(alertDiv);
+          }
+        }, 3000);
+      }
+    });
+  });
+</script>
+
 <%- include("partials/footer.ejs") %>
